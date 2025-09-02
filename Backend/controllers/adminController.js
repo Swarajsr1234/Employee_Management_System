@@ -36,7 +36,8 @@ const createOrUpdateEmployee = async (req , res) => {
       designation,
       manager_id = null,
       profile_pic = null,
-      resume = null
+      resume = null,
+      role
     } = req.body;
 
     if(!user_id || !department || !designation)
@@ -58,6 +59,11 @@ const createOrUpdateEmployee = async (req , res) => {
       }
 
       const[empRows] = await db.query('select id from employee where user_id = ? ' , [user_id]);
+
+      if(role)
+      {
+        await db.query('update users set role = ? where id = ?' , [role , user_id])
+      };
 
       if(empRows.length > 0)
       {
