@@ -14,14 +14,15 @@ const getAllUsers = async (req , res) => {
     e.designation , 
     e.manager_id , 
     e.profile_pic , 
-    e.resume
+    e.resume , 
+    m.name AS manager_name
     from users u 
     left join employee e on u.id = e.user_id
+    left join users m on m.id = e.manager_id
     order by u.id ASC 
     `;
     const [rows] = await db.query(sql);
     res.status(200).json(rows);
-
   } catch (error) {
     console.log(error);
     res.status(500).json({message : "Database Server error"});
@@ -34,7 +35,7 @@ const createOrUpdateEmployee = async (req , res) => {
       user_id,
       department,
       designation,
-      manager_id = null,
+      manager_id,
       profile_pic = null,
       resume = null,
       role
@@ -73,7 +74,7 @@ const createOrUpdateEmployee = async (req , res) => {
       }else{
         const insertsql = `insert into employee (user_id , department , designation , manager_id , profile_pic , resume) values(? , ? , ? , ? , ? , ?)`;
         await db.query(insertsql ,[user_id , department , designation , manager_id , profile_pic , resume]);
-        return res.status(201).json({message : "Employee inserted successfully in employee table"});
+        return res.status(200).json({message : "Employee inserted successfully in employee table"});
       }
 
     } catch (error) {
@@ -82,4 +83,23 @@ const createOrUpdateEmployee = async (req , res) => {
     }
 }
 
-module.exports = { getAllUsers , createOrUpdateEmployee };
+//function to delete  the employee 
+const deleteEmployee = async (req , res) => {
+
+    const { user_id } = req.body; 
+
+    if(!user_id){
+      return res.status(400).json({message : "user_id is required.."});
+    }
+
+    try {
+      const deletesql = `delete from users where id = ?`;
+      await db.query(deletesql , [user_id]);
+      return res.status(200).json({message : "Employee Deleted Successfully.."});
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({message : "Database Error"});
+    }
+}
+
+module.exports = { getAllUsers , createOrUpdateEmployee , deleteEmployee};

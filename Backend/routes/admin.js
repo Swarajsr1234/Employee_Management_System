@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getAllUsers , createOrUpdateEmployee} = require('../controllers/adminController');
+const { getAllUsers , createOrUpdateEmployee , deleteEmployee} = require('../controllers/adminController');
 
 const{ protect , isAdmin} = require('../middleware/authMiddleware');
 
-router.get('/users' , protect ,isAdmin , getAllUsers);
-router.post('/employee' , protect , isAdmin , createOrUpdateEmployee);
-
+router.get('/users' , getAllUsers);
+router.post('/employee' , createOrUpdateEmployee);
+router.delete('/deleteEmp' , deleteEmployee);
 module.exports = router;
