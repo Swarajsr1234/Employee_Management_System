@@ -12,7 +12,7 @@ const Admin_DashBoard = ()=>{
 
         if(!token || role != "admin")
         {
-            navigate("/login")
+            navigate("/login");
         }
     } , [])
 
