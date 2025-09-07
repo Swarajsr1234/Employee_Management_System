@@ -20,6 +20,7 @@ const register = async (req , res)=>{
             name , email , hashedPassword
         ]);
 
+        console.log("User Register Seccefully.");
         res.status(200).json({message:"User Register Seccefully."});
     } catch (error) {
         console.log(error);
@@ -47,6 +48,7 @@ const login = async ( req , res ) => {
         }
 
         const token = generateToken(existingUser);
+        console.log("login response send");
 
         return res.status(200).json({message : "Login successful 🚀" , token});
 
